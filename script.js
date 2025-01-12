@@ -5,28 +5,41 @@ if (index < 0 || index >= buckets.length) {
 
   class HashMap {
     constructor(capacity, loadFactor){
+        this.table = new Array(capacity);
         this.capacity = capacity;
         this.loadFactor = loadFactor;
     }
 
     hash(key){
         let hashCode = 0;
-      
+        let hashValue;
+
         const primeNumber = 31;
         for (let i = 0; i < key.length; i++) {
             hashCode = primeNumber * hashCode + key.charCodeAt(i);
+            hashValue = hashCode % this.capacity;
         }
 
-        return hashCode;
+        return hashValue;
     }
 
     set(key, value){
         //if  If a key already exists, then the old value is overwritten, 
         // and we can say that we update the key’s value (e.g. Carlos is our key but it is called twice: once with value I am the old value., and once with value I am the new value.. 
         // Following this logic, Carlos should contain only the latter value).
+        const index = this.hash(key);
+        this.table[index] = value;
+    }
 
-        this.key = key;
-        this.value = value; 
+    get(key){
+        const index = this.hash(key);
+        value = this.table[index]; 
+        
+        if(value){
+            return value;
+        } else {
+            return null;
+        }
     }
   }
 
