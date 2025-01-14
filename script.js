@@ -42,7 +42,7 @@
                     const linkedList = bucket;
                     let current = linkedList.head;
 
-                    while (current.nextNode){
+                    while (current){
                         this.set(current.key, current.value);
                         current = current.nextNode;
                     }
@@ -202,7 +202,7 @@ class LinkedList {
     contains(key) {
         let current = this.head;
 
-        while(current.nextNode){
+        while(current){
             if(current.key === key){
                 console.log(`FOUND KEY! \n`);
                 return true
@@ -218,7 +218,7 @@ class LinkedList {
     retrieveValueFromKey(key, value) {
         let current = this.head;
 
-        while(current.nextNode){
+        while(current){
             if(current.key === key){
                 return current.value;
             }
