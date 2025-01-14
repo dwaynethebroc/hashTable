@@ -34,17 +34,18 @@
             //reset size 
             this.size = 0;
 
-            //rehash old array into new function 
-            //for reach filled bucket
+            //rehash old linkedList into new function 
             for(const bucket of tempArray){
                 //if bucket is filled
                 if(bucket) {
-                    if(bucket.isArray() === true){
-                        //iterate through array and set each value of linkedList into new hashmap
-                    } else {
-                        //
+                    //iterate through array and call set method on each key/value of linkedList
+                    const linkedList = bucket;
+                    let current = linkedList.head;
+
+                    while (current.nextNode){
+                        this.set(current.key, current.value);
+                        current = current.nextNode;
                     }
-                    
                 }
             }
         }
@@ -57,10 +58,10 @@
         // Following this logic, Carlos should contain only the latter value).
         if(testIfKeyExists){
             const index = this.hash(key);
-            this.table[index] = {
-                key: key,
-                value: value,
-            }
+            const linkedList = this.table[index];
+            linkedList.append(key, value);
+
+            this.table[index] = linkedList;
 
             console.log('key has been updated');
         } 
@@ -100,13 +101,15 @@
             throw new Error("Trying to access index out of bounds");
         }
 
-        const value = this.table[index].value; 
-        
-        if(value) {
-            return value;
-        } else {
-            return null;
+        const linkedList = this.table[index];
+        let keyExistsInList = linkedList.contains(key);
+        let value = null;
+
+        if(keyExistsInList){
+            value = linkedList.retrieveValueFromKey(key);
         }
+        
+        return value;
     }
 
     has(key) {
@@ -126,8 +129,15 @@
             // }
 
             //Go through each node of the linkedList and check if the key exists already
+            //If there is a matching key return true
+            //Else return false
 
-            
+            const linkedList = this.table[index];
+            if(linkedList.contains(key)) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
   }
@@ -187,6 +197,37 @@ class LinkedList {
             secondLast.nextNode = null;
             this.size--;
         }
+    }
+
+    contains(key) {
+        let current = this.head;
+
+        while(current.nextNode){
+            if(current.key === key){
+                console.log(`FOUND KEY! \n`);
+                return true
+            }
+
+            current = current.nextNode;
+        }
+
+        console.log("NO MATCHING KEY WAS FOUND!! \n ")
+        return false; 
+    }
+
+    retrieveValueFromKey(key, value) {
+        let current = this.head;
+
+        while(current.nextNode){
+            if(current.key === key){
+                return current.value;
+            }
+
+            current = current.nextNode;
+        }
+
+        console.log("NO MATCHING KEY WAS FOUND!! \n ")
+        return false; 
     }
 
     toString(){
