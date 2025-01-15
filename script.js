@@ -15,6 +15,7 @@
         for (let i = 0; i < key.length; i++) {
             hashCode = ((primeNumber * hashCode + key.charCodeAt(i)) % this.capacity);
         }
+        console.log(`Hashing key "${key}" to index ${hashCode}`);
         return hashCode;
     }
 
@@ -49,6 +50,7 @@
                     }
                 }
             }
+            console.log(`New capacity: ${this.capacity}`);
         }
 
         const testIfKeyExists = this.has(key);
@@ -58,13 +60,18 @@
         // and we can say that we update the key’s value (e.g. Carlos is our key but it is called twice: once with value I am the old value., and once with value I am the new value.. 
         // Following this logic, Carlos should contain only the latter value).
         if(testIfKeyExists){
+            
             const index = this.hash(key);
-            const linkedList = this.table[index];
-            linkedList.append(key, value);
+            let current = this.table[index].head;
 
-            this.table[index] = linkedList;
+            while(current) {
+                if(current.key === key){
+                    current.value = value;
+                }
+                current = current.nextNode;
+            }
 
-            console.log('key has been updated');
+            console.log(`Key "${key}" already exists. Updating its value to "${value}".`);
         } 
         //if key doesn't already exists, make a key, set index, and value as object pair
         else {       
@@ -95,6 +102,8 @@
                     console.log(bucket.toString());
                 }
             }
+
+            console.log(`Key "${key}" does not exist. Adding new key-value pair.`);
         }
     }
 
@@ -120,28 +129,36 @@
     //takes a key as an argument and returns true or false based on whether or not the key is in the hash map.
     has(key) {
         const index = this.hash(key);
+        console.log(`Checking if key "${key}" exists at index ${index}.`);
 
-        if (index < 0 || index >= this.table.length) {
-            throw new Error("Trying to access index out of bounds");
-        }
+            if (index < 0 || index >= this.table.length) {
+                throw new Error("Trying to access index out of bounds");
+            }
+    
+            if(this.table[index]){
 
-        if(this.table[index]){
-
-            const linkedList = this.table[index];
-            if(linkedList.contains(key)) {
-                return true;
+                if(this.table[index].contains(key)) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
-        }
     }
 
     // takes a key as an argument. If the given key is in the hash map, it should remove the entry with that key and return true. If the key isn’t in the hash map, it should return false.
     remove(key) {
+
         const index = this.hash(key);
 
         if (index < 0 || index >= this.table.length) {
             throw new Error("Trying to access index out of bounds");
+        }
+
+        if(!this.table[index]){
+            console.log(`No linked list at index ${index}, key "${key}" not found.`);
+            return false;
         }
 
         if(this.table[index]){
@@ -170,9 +187,52 @@
 
     //returns an array containing all the values.
     values() {
-        
+        //make copy of HashMap
+        const hashMapCopy = this.table;
+        const valueArray = [];
+
+        //go through each index of HashArray
+        for(const bucket of hashMapCopy){
+            //if index has a linkedList
+            if(bucket) {
+                //iterate through array and call set method on each key/value of linkedList
+                let current = bucket.head;
+
+                while (current){
+                    valueArray.push(current.value);
+                    current = current.nextNode;
+                }
+            }
+        }
+        console.log(valueArray);
+        return valueArray;
     }
 
+    //returns an array that contains each key, value pair. Example: [[firstKey, firstValue], [secondKey, secondValue]]
+    entries() {
+        //make copy of HashMap
+        const hashMapCopy = this.table;
+        const entryArray = [];
+
+        //go through each index of HashArray
+        for(const bucket of hashMapCopy){
+            //if index has a linkedList
+            if(bucket) {
+                //iterate through array and call set method on each key/value of linkedList
+                let current = bucket.head;
+
+                while (current){
+                    const key = current.key;
+                    const value = current.value; 
+                    
+                    entryArray.push({key, value});
+                    current = current.nextNode;
+                }
+            }
+        }
+        console.log(entryArray);
+        return entryArray;
+    }
   }
 
 class Node {
@@ -233,15 +293,18 @@ class LinkedList {
     }
 
     contains(key) {
+        if(!this.head){
+            return false;
+        }
+
         let current = this.head;
 
         while(current){
             if(current.key === key){
-                console.log(`FOUND KEY! \n`);
                 return true
+            } else {
+                current = current.nextNode;
             }
-
-            current = current.nextNode;
         }
 
         return false; 
@@ -253,10 +316,9 @@ class LinkedList {
         let current = this.head;
         let count = 0;
 
-        while(current.nextNode){
+        while(current){
             if(current.key === key){
-                console.log(`KEY FOUND AT INDEX:`);
-                console.log(`${count} \n`);
+                console.log(`Key "${key}" found at node depth (index) of -> ${count}`);
                 return count;
             }
 
@@ -264,7 +326,7 @@ class LinkedList {
             count++;
         }
 
-        console.log(`VALUE NOT FOUND AT ANY INDEX :(((`);
+        console.log(`Key "${key}" not found.`);
         return null;
     }
 
@@ -348,8 +410,23 @@ masterHash.set('sunday', 'findMeaning');
 masterHash.set('inTheEnd', 'itDoesntEven');
 masterHash.set('matter', 'iveComeSoFar');
 masterHash.set('sugarPie', 'honeyBun');
-masterHash.set('hereComesTheSun', 'doDooDooDoo');
+masterHash.set('hereComesTheSun', 'doDodoDooDoo');
 
+console.log(masterHash);
+console.log(masterHash.length());
+
+console.log(masterHash.get('matter'));
+console.log(masterHash.get('sugarPie'));
+
+console.log(masterHash.has('hereComesTheSun'));
+console.log(masterHash.has('monday'));
+console.log(masterHash.has('friday'));
+
+console.log(masterHash.remove('hereComesTheSun')); 
+console.log(masterHash.remove('monday'));
+console.log(masterHash.remove('friday')); //error in removeAt function
+
+console.log(masterHash.length());
 
 console.log(masterHash);
 
