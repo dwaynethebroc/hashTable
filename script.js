@@ -204,7 +204,6 @@
                 }
             }
         }
-        console.log(valueArray);
         return valueArray;
     }
 
@@ -230,7 +229,6 @@
                 }
             }
         }
-        console.log(entryArray);
         return entryArray;
     }
   }
@@ -362,13 +360,14 @@ class LinkedList {
             //make head
             this.head = node;
             return;
+
         }   else {
             //start at beginning of list
             previous = null;
             current = this.head;
             
             //cycle through list until the correct index node
-            while(count < index) {
+            while(count <= index) {
                 //node before index
                 previous = current; 
                 count++;
@@ -414,6 +413,8 @@ masterHash.set('hereComesTheSun', 'doDodoDooDoo');
 
 console.log(masterHash);
 console.log(masterHash.length());
+console.log(masterHash.values);
+console.log(masterHash.entries);
 
 console.log(masterHash.get('matter'));
 console.log(masterHash.get('sugarPie'));
@@ -422,11 +423,17 @@ console.log(masterHash.has('hereComesTheSun'));
 console.log(masterHash.has('monday'));
 console.log(masterHash.has('friday'));
 
+console.log(masterHash.values());
+console.log(masterHash.entries());
+
 console.log(masterHash.remove('hereComesTheSun')); 
 console.log(masterHash.remove('monday'));
 console.log(masterHash.remove('friday')); //error in removeAt function
 
 console.log(masterHash.length());
 
+
+
+masterHash.clear();
 console.log(masterHash);
 
