@@ -13,9 +13,9 @@
 
         const primeNumber = 31;
         for (let i = 0; i < key.length; i++) {
-            hashCode = ((primeNumber * hashCode + key.charCodeAt(i)) % this.capacity);
+            hashCode = (((primeNumber * hashCode)  + key.charCodeAt(i)) % this.capacity);
         }
-        console.log(`Hashing key "${key}" to index ${hashCode}`);
+        // console.log(`Hashing key "${key}" to index ${hashCode}`);
         return hashCode;
     }
 
@@ -103,7 +103,7 @@
                 }
             }
 
-            console.log(`Key "${key}" does not exist. Adding new key-value pair.`);
+            // console.log(`Key "${key}" does not exist. Adding new key-value pair.`);
         }
     }
 
@@ -129,7 +129,7 @@
     //takes a key as an argument and returns true or false based on whether or not the key is in the hash map.
     has(key) {
         const index = this.hash(key);
-        console.log(`Checking if key "${key}" exists at index ${index}.`);
+        // console.log(`Checking if key "${key}" exists at index ${index}.`);
 
             if (index < 0 || index >= this.table.length) {
                 throw new Error("Trying to access index out of bounds");
@@ -182,7 +182,10 @@
 
     //removes all entries in the hash map.
     clear() {
+        this.capacity = 10;
         this.table = new Array(this.capacity);
+        this.size = 0;
+        console.log(`The HashMap has been cleared and reset`);
     }
 
     //returns an array containing all the values.
@@ -347,32 +350,29 @@ class LinkedList {
 
     removeAt(index) {
         //if index is out of range 
-        if(index > 0 && index > this.size) {
+        if(index < 0 || index >= this.size) {
+            console.log(`Index ${index} is an out of bounds index`)
             return;
         }
 
-        let count = 0;
-        let current;
-        let previous;
+        
+        let current = this.head;
 
         //if list is empty
-        if(!this.head) {
+        if(index === 0) {
             //make head
-            this.head = node;
-            return;
-
+            this.head = current.nextNode
         }   else {
             //start at beginning of list
-            previous = null;
-            current = this.head;
+            let previous = null;
+            let count = 0;
             
             //cycle through list until the correct index node
-            while(count <= index) {
+            while(count < index) {
                 //node before index
                 previous = current; 
-                count++;
-                //node after index
                 current = current.nextNode;
+                count++;
             }
 
             //delete node at index  
@@ -400,40 +400,68 @@ class LinkedList {
 
 const masterHash = new HashMap(10, 0.75);
 
-masterHash.set('tuesday', 'dog');
-masterHash.set('wednesday', 'cat');
-masterHash.set('thursday', 'parrot');
-masterHash.set('friday', 'Koala');
-masterHash.set('saturday', 'god');
-masterHash.set('sunday', 'findMeaning');
-masterHash.set('inTheEnd', 'itDoesntEven');
-masterHash.set('matter', 'iveComeSoFar');
-masterHash.set('sugarPie', 'honeyBun');
-masterHash.set('hereComesTheSun', 'doDodoDooDoo');
+//Personal Test Case
 
-console.log(masterHash);
-console.log(masterHash.length());
-console.log(masterHash.values);
-console.log(masterHash.entries);
+// masterHash.set('tuesday', 'dog');
+// masterHash.set('wednesday', 'cat');
+// masterHash.set('thursday', 'parrot');
+// masterHash.set('friday', 'Koala');
+// masterHash.set('saturday', 'god');
+// masterHash.set('sunday', 'findMeaning');
+// masterHash.set('inTheEnd', 'itDoesntEven');
+// masterHash.set('matter', 'iveComeSoFar');
+// masterHash.set('sugarPie', 'honeyBun');
+// masterHash.set('hereComesTheSun', 'doDodoDooDoo');
 
-console.log(masterHash.get('matter'));
-console.log(masterHash.get('sugarPie'));
+// console.log(masterHash);
+// console.log(masterHash.length());
+// console.log(masterHash.values());
+// console.log(masterHash.entries());
 
-console.log(masterHash.has('hereComesTheSun'));
-console.log(masterHash.has('monday'));
-console.log(masterHash.has('friday'));
+// console.log(masterHash.get('matter'));
+// console.log(masterHash.get('sugarPie'));
 
-console.log(masterHash.values());
-console.log(masterHash.entries());
+// console.log(masterHash.has('hereComesTheSun'));
+// console.log(masterHash.has('monday'));
+// console.log(masterHash.has('friday'));
 
-console.log(masterHash.remove('hereComesTheSun')); 
-console.log(masterHash.remove('monday'));
-console.log(masterHash.remove('friday')); //error in removeAt function
+// console.log(masterHash.remove('hereComesTheSun')); 
+// console.log(masterHash.remove('monday'));
+// console.log(masterHash.remove('friday')); //error in removeAt function
 
-console.log(masterHash.length());
+// console.log(masterHash.length());
+// console.log(masterHash.values());
+// console.log(masterHash.entries());
+
+// masterHash.clear();
+// console.log(masterHash);")
 
 
+//ODIN PROJECT TEST CASE
+const test = new HashMap(15, .75);
 
-masterHash.clear();
-console.log(masterHash);
+test.set('apple', 'red')
+test.set('banana', 'yellow')
+test.set('carrot', 'orange')
+test.set('dog', 'brown')
+test.set('elephant', 'gray')
+test.set('frog', 'green')
+test.set('grape', 'purple')
+test.set('hat', 'black')
+test.set('ice cream', 'white')
+test.set('jacket', 'blue')
+test.set('kite', 'pink')
+test.set('lion', 'golden')
+
+console.log(test);
+
+test.set('hat', 'white');
+test.set('dog', 'pug');
+test.set('apple', 'honeycrisp');
+
+test.length();
+console.log(test);
+
+test.set('moon', 'silver');
+
 
